@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "cxtapp"
 include(":app")
+include(":network")
+include(":common")
