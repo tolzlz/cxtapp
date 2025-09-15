@@ -39,10 +39,10 @@ protobuf {
             task.builtins {
                 create("java") {
                     option("lite") // lite 模式，生成的 Java 类更轻量
-                    outputSubDir = "com/cxtapp/proto"
+//                    outputSubDir = "com/cxtapp/proto"
                 }
                 create("kotlin") {
-                    outputSubDir = "com/cxtapp/proto"
+//                    outputSubDir = "com/cxtapp/proto"
                 }
             }
         }

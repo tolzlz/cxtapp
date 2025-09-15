@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 //    id("org.jetbrains.kotlin.plugin.parcelize")
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.ksp.library)
 }
 
 android {
@@ -34,7 +35,9 @@ android {
         jvmTarget = "17"
     }
 }
-
+//ksp {
+//    arg("rxhttp_package", "rxhttp")  //指定RxHttp类包名，可随意指定
+//}
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -79,4 +82,13 @@ dependencies {
 
     implementation(project(":common"))
     implementation(project(":proto"))
+    implementation("com.github.liujingxing.rxhttp:rxhttp:3.5.0")
+    implementation("com.github.liujingxing.rxhttp:converter-serialization:3.5.0")
+    implementation("com.github.liujingxing.rxhttp:converter-fastjson:3.5.0")
+    implementation("com.github.liujingxing.rxhttp:converter-jackson:3.5.0")
+    implementation("com.github.liujingxing.rxhttp:converter-moshi:3.5.0")
+    implementation("com.github.liujingxing.rxhttp:converter-protobuf:3.5.0")
+    implementation("com.github.liujingxing.rxhttp:converter-simplexml:3.5.0")
+    // ksp/kapt/annotationProcessor choose one
+    ksp("com.github.liujingxing.rxhttp:rxhttp-compiler:3.5.0")
 }

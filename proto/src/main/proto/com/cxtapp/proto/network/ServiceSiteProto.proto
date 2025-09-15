@@ -1,6 +1,0 @@
-syntax = "proto3";
-
-message ServiceSiteProto {
-    string uri = 1;
-    string language_code = 2;
-}

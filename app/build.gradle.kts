@@ -47,3 +47,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+
+//https://github.com/liujingxing/rxhttp/tree/master
+//https://github.com/liangjingkanji/Net/
