@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="21">
+    <bytecodeTargetLevel target="17">
       <module name="cxtapp.router-api" target="21" />
       <module name="cxtapp.router-config" target="21" />
       <module name="router-gradle-plugin" target="21" />
