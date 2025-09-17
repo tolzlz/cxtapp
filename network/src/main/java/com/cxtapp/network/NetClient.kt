@@ -11,5 +11,5 @@ interface NetClient {
      * @param block 函数中可以配置请求参数
      */
 
-    fun get(path: String, tag: Any? = null, block: (IRequest.() -> Unit)? = null): IResponse
+    fun get(path: String, tag: Any? = null, block: (IRequest.() -> Unit)? = null): IResponse<>
 }

@@ -1,5 +1,8 @@
 package com.cxtapp.network
 
+import com.drake.net.Post
+import com.drake.net.utils.scopeNet
+import kotlinx.coroutines.launch
 import rxhttp.toFlow
 import rxhttp.wrapper.param.RxHttp
 import java.io.File
@@ -16,5 +19,17 @@ class Test {
 //            }, { throwable ->
 //
 //            })
+        scopeNet {
+            val await = Post<String>("path").await()
+
+            launch {
+                val task = Post<String>("path/error").await()  // 此时发生请求错误
+            }.invokeOnCompletion {
+                // A
+            }
+        }.catch {
+            // B
+        }
     }
+
 }
