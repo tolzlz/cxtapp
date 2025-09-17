@@ -1,4 +1,4 @@
-package com.cxtapp.network
+package com.cxtapp.network.enums
 
 enum class Method(val value: String) {
     GET("GET"),
