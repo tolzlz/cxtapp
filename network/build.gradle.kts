@@ -89,7 +89,7 @@ dependencies {
     implementation("com.github.liujingxing.rxhttp:converter-moshi:3.5.0")
     implementation("com.github.liujingxing.rxhttp:converter-protobuf:3.5.0")
     implementation("com.github.liujingxing.rxhttp:converter-simplexml:3.5.0")
-    implementation("com.github.liangjingkanji:Net:3.7.0")
+//    implementation("com.github.liangjingkanji:Net:3.7.0")
     // ksp/kapt/annotationProcessor choose one
     ksp("com.github.liujingxing.rxhttp:rxhttp-compiler:3.5.0")
 }
