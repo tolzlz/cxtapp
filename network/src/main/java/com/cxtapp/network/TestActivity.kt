@@ -2,6 +2,7 @@ package com.cxtapp.network
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
+import com.drake.net.scope.ViewCoroutineScope
 import com.drake.net.utils.scopeLife
 
 class TestActivity : FragmentActivity() {
@@ -18,5 +19,6 @@ class TestActivity : FragmentActivity() {
                 showFile(file)
             }
         }
+        ViewCoroutineScope
     }
 }
