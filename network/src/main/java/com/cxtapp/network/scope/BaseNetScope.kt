@@ -1,13 +1,29 @@
 package com.cxtapp.network.scope
 
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import com.cxtapp.network.extensions.cancelScopeOn
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlin.coroutines.CoroutineContext
 
-class BaseNetScope(val dispatcher: CoroutineDispatcher = Dispatchers.Main) : CoroutineScope {
+class BaseNetScope(lifecycleOwner: LifecycleOwner? = null,
+                   lifeEvent: Lifecycle.Event = Lifecycle.Event.ON_DESTROY,
+                   val dispatcher: CoroutineDispatcher = Dispatchers.Main) : CoroutineScope {
+
+
+    init {
+        lifecycleOwner?.lifecycle?.addObserver(object : LifecycleEventObserver {
+            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                if (lifeEvent == event) cancel()
+            }
+        })
+    }
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         catch(throwable)
