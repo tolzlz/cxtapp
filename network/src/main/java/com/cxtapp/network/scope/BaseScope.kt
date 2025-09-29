@@ -2,6 +2,7 @@ package com.cxtapp.network.scope
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +33,7 @@ abstract class BaseScope(lifecycleOwner: LifecycleOwner? = null,
                     }catch (e: Exception) {
                         false
                     }
+                    previewFinish(previewSucceed)
                 }
             }
             block()
@@ -41,6 +43,22 @@ abstract class BaseScope(lifecycleOwner: LifecycleOwner? = null,
         return this
     }
 
-    protected open fun start();
+    protected abstract fun start();
+
+    /**
+     * 读取缓存回调
+     * @param succeed 缓存是否成功
+     */
+    protected open fun previewFinish(succeed: Boolean) {
+        previewEnabled = false
+    }
+
+    override fun cancel(cause: CancellationException?) {
+        //TODO
+        super.cancel(cause)
+    }
+
+
+
 
 }

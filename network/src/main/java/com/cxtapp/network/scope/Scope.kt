@@ -82,5 +82,11 @@ abstract class Scope(lifecycleOwner: LifecycleOwner? = null,
         //TODO
     }
 
+    open fun cancel(cause: CancellationException? = null) {
+        val job = coroutineContext[Job]
+            ?: error("Scope cannot be cancelled because it does not have a job: $this")
+        job.cancel(cause)
+    }
+
 
 }
