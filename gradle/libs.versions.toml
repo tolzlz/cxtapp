@@ -1,5 +1,6 @@
 [versions]
 agp = "8.13.0"
+documentfile = "1.1.0"
 gson = "2.13.2"
 jacksonDatabind = "2.20.0"
 jacksonannotations = "2.20"
@@ -26,6 +27,7 @@ jetbrainsKotlinJvm = "2.2.20"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-documentfile = { module = "androidx.documentfile:documentfile", version.ref = "documentfile" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

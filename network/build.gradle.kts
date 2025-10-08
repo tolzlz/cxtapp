@@ -80,6 +80,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(libs.androidx.documentfile)
+
     implementation(project(":common"))
     implementation(project(":proto"))
     implementation("com.github.liujingxing.rxhttp:rxhttp:3.5.0")
