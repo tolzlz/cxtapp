@@ -14,18 +14,28 @@ abstract class IBaseRequest<T> : IRequest<T> {
      * 解析配置Path, 支持识别query参数和绝对路径
      * @param path 如果其不包含http/https则会自动拼接
      * 先判断host
-     * 再判断goble
+     * 再判断globle
      */
-    fun setPath(host: String?,path: String?) {
-        val url = path?.toHttpUrlOrNull()
+    fun setPath(reqUrl: String) {
+        val url = reqUrl.toHttpUrlOrNull()
         if (url == null) {
             try {
-                httpUrl = (host + path).toHttpUrl().newBuilder()
+                httpUrl = reqUrl.toHttpUrl().newBuilder()
             } catch (e: Throwable) {
-                throw URLParseException(host + path, e)
+                throw URLParseException(reqUrl, e)
             }
         } else {
             this.httpUrl = url.newBuilder()
         }
+    }
+
+    /**
+     * 解析配置Path, 支持识别query参数和绝对路径
+     * @param path 如果其不包含http/https则会自动拼接
+     * 先判断host
+     * 再判断goble
+     */
+    fun setPath(url: HttpUrl) {
+        httpUrl = url.newBuilder()
     }
 }
