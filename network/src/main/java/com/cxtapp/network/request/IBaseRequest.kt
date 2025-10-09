@@ -19,8 +19,20 @@ abstract class IBaseRequest<T> : IRequest<T> {
     fun setPath(reqUrl: String) {
         val url = reqUrl.toHttpUrlOrNull()
         if (url == null) {
+            throw URLParseException(reqUrl)
+        } else {
+            this.httpUrl = url.newBuilder()
+        }
+    }
+
+    /**
+     * 先解析reqUrl，如果没有host，则去判断host+reqUrl
+     */
+    fun setPath(host:String, reqUrl: String) {
+        val url = reqUrl.toHttpUrlOrNull()
+        if (url == null) {
             try {
-                httpUrl = reqUrl.toHttpUrl().newBuilder()
+                httpUrl = (host + reqUrl).toHttpUrl().newBuilder()
             } catch (e: Throwable) {
                 throw URLParseException(reqUrl, e)
             }
