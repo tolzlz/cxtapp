@@ -22,28 +22,25 @@
  * SOFTWARE.
  */
 
-package com.cxtapp.network.internal
+package com.cxtapp.network.exception
 
-import com.cxtapp.network.exception.NetException
-import com.cxtapp.network.exception.URLParseException
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.InternalForInheritanceCoroutinesApi
+import com.cxtapp.network.cache.ForceCache
+import okhttp3.Request
 
-@OptIn(InternalForInheritanceCoroutinesApi::class)
-@PublishedApi
-internal class NetDeferred<M>(private val deferred: Deferred<M>) : Deferred<M> by deferred {
+/**
+ * 读取缓存失败
+ * 仅当设置强制缓存模式[com.cxtapp.network.cache.CacheMode.READ]和[com.cxtapp.network.cache.CacheMode.REQUEST_THEN_READ]才会发生此异常
+ * @param request 请求信息
+ * @param message 错误描述信息
+ * @param cause 错误原因
+ */
+class NoCacheException(
+    request: Request,
+    message: String? = null,
+    cause: Throwable? = null
+) : NetException(request, message, cause) {
 
-    override suspend fun await(): M {
-        // 追踪到网络请求异常发生位置
-        val occurred = Throwable().stackTrace.getOrNull(1)?.run { " ...(${fileName}:${lineNumber})" }
-        return try {
-            deferred.await()
-        } catch (e: Exception) {
-            when {
-                occurred != null && e is NetException -> e.occurred = occurred
-                occurred != null && e is URLParseException -> e.occurred = occurred
-            }
-            throw  e
-        }
+    override fun getLocalizedMessage(): String {
+        return "cacheKey = " + ForceCache.key(request) + " " + super.getLocalizedMessage()
     }
 }

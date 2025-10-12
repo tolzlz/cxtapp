@@ -22,28 +22,16 @@
  * SOFTWARE.
  */
 
-package com.cxtapp.network.internal
+package com.cxtapp.network.transform
 
-import com.cxtapp.network.exception.NetException
-import com.cxtapp.network.exception.URLParseException
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.InternalForInheritanceCoroutinesApi
 
-@OptIn(InternalForInheritanceCoroutinesApi::class)
-@PublishedApi
-internal class NetDeferred<M>(private val deferred: Deferred<M>) : Deferred<M> by deferred {
-
-    override suspend fun await(): M {
-        // 追踪到网络请求异常发生位置
-        val occurred = Throwable().stackTrace.getOrNull(1)?.run { " ...(${fileName}:${lineNumber})" }
-        return try {
-            deferred.await()
-        } catch (e: Exception) {
-            when {
-                occurred != null && e is NetException -> e.occurred = occurred
-                occurred != null && e is URLParseException -> e.occurred = occurred
-            }
-            throw  e
-        }
-    }
+/**
+ * 可以将[Deferred]返回结果进行转换
+ * [block]在[Deferred]执行成功返回结果时执行
+ */
+fun <T, R> Deferred<T>.transform(block: (T) -> R): DeferredTransform<T, R> {
+    return DeferredTransform(this, block)
 }
+
+data class DeferredTransform<T, R>(val deferred: Deferred<T>, val block: (T) -> R)

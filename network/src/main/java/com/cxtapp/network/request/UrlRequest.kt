@@ -22,28 +22,31 @@
  * SOFTWARE.
  */
 
-package com.cxtapp.network.internal
+package com.cxtapp.network.request
 
-import com.cxtapp.network.exception.NetException
-import com.cxtapp.network.exception.URLParseException
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.InternalForInheritanceCoroutinesApi
+open class UrlRequest : BaseRequest() {
 
-@OptIn(InternalForInheritanceCoroutinesApi::class)
-@PublishedApi
-internal class NetDeferred<M>(private val deferred: Deferred<M>) : Deferred<M> by deferred {
+    override fun param(name: String, value: String?) {
+        value ?: return
+        httpUrl.setQueryParameter(name, value)
+    }
 
-    override suspend fun await(): M {
-        // 追踪到网络请求异常发生位置
-        val occurred = Throwable().stackTrace.getOrNull(1)?.run { " ...(${fileName}:${lineNumber})" }
-        return try {
-            deferred.await()
-        } catch (e: Exception) {
-            when {
-                occurred != null && e is NetException -> e.occurred = occurred
-                occurred != null && e is URLParseException -> e.occurred = occurred
-            }
-            throw  e
+    override fun param(name: String, value: String?, encoded: Boolean) {
+        value ?: return
+        if (encoded) {
+            httpUrl.setEncodedQueryParameter(name, value)
+        } else {
+            httpUrl.setQueryParameter(name, value)
         }
+    }
+
+    override fun param(name: String, value: Number?) {
+        value ?: return
+        httpUrl.setQueryParameter(name, value.toString())
+    }
+
+    override fun param(name: String, value: Boolean?) {
+        value ?: return
+        httpUrl.setQueryParameter(name, value.toString())
     }
 }

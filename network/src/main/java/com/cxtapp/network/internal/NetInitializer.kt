@@ -24,26 +24,20 @@
 
 package com.cxtapp.network.internal
 
-import com.cxtapp.network.exception.NetException
-import com.cxtapp.network.exception.URLParseException
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.InternalForInheritanceCoroutinesApi
+import android.content.Context
+import androidx.startup.Initializer
+import com.cxtapp.network.NetConfig
 
-@OptIn(InternalForInheritanceCoroutinesApi::class)
-@PublishedApi
-internal class NetDeferred<M>(private val deferred: Deferred<M>) : Deferred<M> by deferred {
+/**
+ * 使用AppStartup默认初始化[NetConfig.app], 仅应用主进程下有效
+ * 在其他进程使用Net请手动在Application中初始化[NetConfig.initialize]
+ */
+internal class NetInitializer : Initializer<Unit> {
+    override fun create(context: Context) {
+        NetConfig.app = context
+    }
 
-    override suspend fun await(): M {
-        // 追踪到网络请求异常发生位置
-        val occurred = Throwable().stackTrace.getOrNull(1)?.run { " ...(${fileName}:${lineNumber})" }
-        return try {
-            deferred.await()
-        } catch (e: Exception) {
-            when {
-                occurred != null && e is NetException -> e.occurred = occurred
-                occurred != null && e is URLParseException -> e.occurred = occurred
-            }
-            throw  e
-        }
+    override fun dependencies(): MutableList<Class<out Initializer<*>>> {
+        return mutableListOf()
     }
 }

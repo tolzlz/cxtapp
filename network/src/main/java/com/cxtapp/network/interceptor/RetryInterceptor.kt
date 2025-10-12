@@ -22,28 +22,30 @@
  * SOFTWARE.
  */
 
-package com.cxtapp.network.internal
+package com.cxtapp.network.interceptor
 
-import com.cxtapp.network.exception.NetException
-import com.cxtapp.network.exception.URLParseException
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.InternalForInheritanceCoroutinesApi
+import androidx.annotation.IntRange
+import okhttp3.Interceptor
+import okhttp3.Response
+import okhttp3.internal.closeQuietly
 
-@OptIn(InternalForInheritanceCoroutinesApi::class)
-@PublishedApi
-internal class NetDeferred<M>(private val deferred: Deferred<M>) : Deferred<M> by deferred {
+/**
+ * 重试次数拦截器
+ * OkHttp自带重试请求规则, 本拦截器并不推荐使用
+ * 因为长时间阻塞用户请求是不合理的, 发生错误请让用户主动重试, 例如显示缺省页或者提示
+ * @property retryCount 重试次数
+ */
+class RetryInterceptor(@IntRange(from = 1) var retryCount: Int = 3) : Interceptor {
 
-    override suspend fun await(): M {
-        // 追踪到网络请求异常发生位置
-        val occurred = Throwable().stackTrace.getOrNull(1)?.run { " ...(${fileName}:${lineNumber})" }
-        return try {
-            deferred.await()
-        } catch (e: Exception) {
-            when {
-                occurred != null && e is NetException -> e.occurred = occurred
-                occurred != null && e is URLParseException -> e.occurred = occurred
-            }
-            throw  e
+    override fun intercept(chain: Interceptor.Chain): Response {
+        var retryCount = 0
+        val request = chain.request()
+        var response = chain.proceed(request)
+        while (!response.isSuccessful && retryCount < this.retryCount) {
+            retryCount++
+            response.closeQuietly()
+            response = chain.proceed(request)
         }
+        return response
     }
 }

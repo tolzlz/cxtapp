@@ -22,28 +22,16 @@
  * SOFTWARE.
  */
 
-package com.cxtapp.network.internal
+package com.cxtapp.network.interceptor
 
-import com.cxtapp.network.exception.NetException
-import com.cxtapp.network.exception.URLParseException
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.InternalForInheritanceCoroutinesApi
+import com.cxtapp.network.request.BaseRequest
 
-@OptIn(InternalForInheritanceCoroutinesApi::class)
-@PublishedApi
-internal class NetDeferred<M>(private val deferred: Deferred<M>) : Deferred<M> by deferred {
+interface RequestInterceptor {
 
-    override suspend fun await(): M {
-        // 追踪到网络请求异常发生位置
-        val occurred = Throwable().stackTrace.getOrNull(1)?.run { " ...(${fileName}:${lineNumber})" }
-        return try {
-            deferred.await()
-        } catch (e: Exception) {
-            when {
-                occurred != null && e is NetException -> e.occurred = occurred
-                occurred != null && e is URLParseException -> e.occurred = occurred
-            }
-            throw  e
-        }
-    }
+    /**
+     * 当你使用Net发起请求的时候就会触发该拦截器
+     * 该拦截器属于轻量级不具备重发的功能, 一般用于请求参数的修改
+     * 请勿在这里进行请求重发可能会导致死循环
+     */
+    fun interceptor(request: BaseRequest)
 }

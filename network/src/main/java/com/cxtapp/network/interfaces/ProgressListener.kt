@@ -21,29 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.cxtapp.network.interfaces
 
-package com.cxtapp.network.internal
+import com.cxtapp.network.component.Progress
 
-import com.cxtapp.network.exception.NetException
-import com.cxtapp.network.exception.URLParseException
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.InternalForInheritanceCoroutinesApi
+/**
+ * 进度监听器, 可能为下载或上传
+ *
+ * @param interval 进度监听器刷新的间隔时间, 单位为毫秒, 默认值为500ms
+ */
+abstract class ProgressListener(var interval: Long = 500) {
+    // 上次进度变化的的开机时间
+    var elapsedTime = 0L
 
-@OptIn(InternalForInheritanceCoroutinesApi::class)
-@PublishedApi
-internal class NetDeferred<M>(private val deferred: Deferred<M>) : Deferred<M> by deferred {
+    // 距离上次进度变化的新增字节数
+    var intervalByteCount = 0L
 
-    override suspend fun await(): M {
-        // 追踪到网络请求异常发生位置
-        val occurred = Throwable().stackTrace.getOrNull(1)?.run { " ...(${fileName}:${lineNumber})" }
-        return try {
-            deferred.await()
-        } catch (e: Exception) {
-            when {
-                occurred != null && e is NetException -> e.occurred = occurred
-                occurred != null && e is URLParseException -> e.occurred = occurred
-            }
-            throw  e
-        }
-    }
+    /**
+     * 监听上传/下载进度回调函数
+     * @param p 上传或者下载进度
+     */
+    abstract fun onProgress(p: Progress)
 }

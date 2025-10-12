@@ -22,28 +22,33 @@
  * SOFTWARE.
  */
 
-package com.cxtapp.network.internal
+package com.cxtapp.network.request
 
-import com.cxtapp.network.exception.NetException
-import com.cxtapp.network.exception.URLParseException
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.InternalForInheritanceCoroutinesApi
+import okhttp3.MediaType.Companion.toMediaType
 
-@OptIn(InternalForInheritanceCoroutinesApi::class)
-@PublishedApi
-internal class NetDeferred<M>(private val deferred: Deferred<M>) : Deferred<M> by deferred {
+object MediaConst {
 
-    override suspend fun await(): M {
-        // 追踪到网络请求异常发生位置
-        val occurred = Throwable().stackTrace.getOrNull(1)?.run { " ...(${fileName}:${lineNumber})" }
-        return try {
-            deferred.await()
-        } catch (e: Exception) {
-            when {
-                occurred != null && e is NetException -> e.occurred = occurred
-                occurred != null && e is URLParseException -> e.occurred = occurred
-            }
-            throw  e
-        }
-    }
+    val IMG = "image/*".toMediaType()
+
+    val GIF = "image/gif".toMediaType()
+
+    val JPEG = "image/jpeg".toMediaType()
+
+    val PNG = "image/png".toMediaType()
+
+    val MP4 = "video/mpeg".toMediaType()
+
+    val TXT = "text/plain".toMediaType()
+
+    val JSON = "application/json; charset=utf-8".toMediaType()
+
+    val XML = "application/xml".toMediaType()
+
+    val HTML = "text/html".toMediaType()
+
+    val FORM = "multipart/form-data".toMediaType()
+
+    val OCTET_STREAM = "application/octet-stream".toMediaType()
+
+    val URLENCODED = "application/x-www-form-urlencoded".toMediaType()
 }

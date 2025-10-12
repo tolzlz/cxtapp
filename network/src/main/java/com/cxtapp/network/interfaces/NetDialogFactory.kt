@@ -22,28 +22,27 @@
  * SOFTWARE.
  */
 
-package com.cxtapp.network.internal
+package com.cxtapp.network.interfaces
 
-import com.cxtapp.network.exception.NetException
-import com.cxtapp.network.exception.URLParseException
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.InternalForInheritanceCoroutinesApi
+import android.app.Dialog
+import android.app.ProgressDialog
+import androidx.fragment.app.FragmentActivity
+import com.cxtapp.network.R
 
-@OptIn(InternalForInheritanceCoroutinesApi::class)
-@PublishedApi
-internal class NetDeferred<M>(private val deferred: Deferred<M>) : Deferred<M> by deferred {
+fun interface NetDialogFactory {
 
-    override suspend fun await(): M {
-        // 追踪到网络请求异常发生位置
-        val occurred = Throwable().stackTrace.getOrNull(1)?.run { " ...(${fileName}:${lineNumber})" }
-        return try {
-            deferred.await()
-        } catch (e: Exception) {
-            when {
-                occurred != null && e is NetException -> e.occurred = occurred
-                occurred != null && e is URLParseException -> e.occurred = occurred
-            }
-            throw  e
+    /**
+     * 构建并返回Dialog. 当使用 scopeDialog 作用域时将会自动显示该对话框且作用域完成后关闭对话框
+     *
+     * @param activity 请求发生所在的[FragmentActivity]
+     */
+    fun onCreate(activity: FragmentActivity): Dialog
+
+    companion object DEFAULT : NetDialogFactory {
+        override fun onCreate(activity: FragmentActivity): Dialog {
+            val progress = ProgressDialog(activity)
+            progress.setMessage(activity.getString(R.string.net_dialog_msg))
+            return progress
         }
     }
 }

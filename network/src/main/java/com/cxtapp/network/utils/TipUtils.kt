@@ -22,28 +22,28 @@
  * SOFTWARE.
  */
 
-package com.cxtapp.network.internal
+package com.cxtapp.network.utils
 
-import com.cxtapp.network.exception.NetException
-import com.cxtapp.network.exception.URLParseException
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.InternalForInheritanceCoroutinesApi
+import android.annotation.SuppressLint
+import android.widget.Toast
+import com.cxtapp.network.NetConfig
 
-@OptIn(InternalForInheritanceCoroutinesApi::class)
-@PublishedApi
-internal class NetDeferred<M>(private val deferred: Deferred<M>) : Deferred<M> by deferred {
+object TipUtils {
 
-    override suspend fun await(): M {
-        // 追踪到网络请求异常发生位置
-        val occurred = Throwable().stackTrace.getOrNull(1)?.run { " ...(${fileName}:${lineNumber})" }
-        return try {
-            deferred.await()
-        } catch (e: Exception) {
-            when {
-                occurred != null && e is NetException -> e.occurred = occurred
-                occurred != null && e is URLParseException -> e.occurred = occurred
-            }
-            throw  e
+    private var toast: Toast? = null
+
+    /**
+     * 重复显示不会覆盖, 可以在子线程显示
+     * 本方法会导致报内存泄露, 这是因为为了避免吐司反复显示导致重叠会长期持有Toast引用来保持单例导致, 可以无视或者自己实现吐司
+     */
+    @SuppressLint("ShowToast")
+    @JvmStatic
+    fun toast(message: String?) {
+        message ?: return
+        runMain {
+            toast?.cancel()
+            toast = Toast.makeText(NetConfig.app, message, Toast.LENGTH_SHORT)
+            toast?.show()
         }
     }
 }
