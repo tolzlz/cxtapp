@@ -28,6 +28,7 @@ package com.cxtapp.network.request
 
 import android.net.Uri
 import com.cxtapp.network.interfaces.ProgressListener
+import com.cxtapp.network.request.body.ProtoRequestBody
 import com.cxtapp.network.utils.fileName
 import com.cxtapp.network.utils.toRequestBody
 import okhttp3.*
@@ -55,6 +56,8 @@ open class BodyRequest : BaseRequest() {
      * 当你设置`partBody`后当前表单请求体中的所有参数都会被存放到partBody中
      */
     open var formBody = FormBody.Builder()
+
+    open var protoBody = ProtoRequestBody.Builder()
 
     /**
      * multipart请求体的媒体类型

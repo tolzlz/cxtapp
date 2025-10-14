@@ -51,4 +51,6 @@ object MediaConst {
     val OCTET_STREAM = "application/octet-stream".toMediaType()
 
     val URLENCODED = "application/x-www-form-urlencoded".toMediaType()
+
+    val PROTOBUF = "application/x-protobuf".toMediaType()
 }
