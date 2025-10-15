@@ -5,7 +5,6 @@ import com.google.protobuf.MessageLite
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.internal.toImmutableList
 import okio.BufferedSink
 import java.io.IOException
 
@@ -37,9 +36,16 @@ class ProtoRequestBody(private val value: MessageLite) : RequestBody() {
     }
 
     class Builder(){
+        var value: MessageLite? = null
+
+        fun addMessage(message: MessageLite) = apply {
+            this.value = message
+        }
+
+
         fun build(): ProtoRequestBody {
-            check(parts.isNotEmpty()) { "Multipart body must have at least one part." }
-            return ProtoRequestBody(boundary, type, parts.toImmutableList())
+            check(value != null) { "ProtoRequest Body must have at least one part." }
+            return ProtoRequestBody(value!!)
         }
     }
 }

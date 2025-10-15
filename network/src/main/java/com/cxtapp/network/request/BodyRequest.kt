@@ -31,6 +31,7 @@ import com.cxtapp.network.interfaces.ProgressListener
 import com.cxtapp.network.request.body.ProtoRequestBody
 import com.cxtapp.network.utils.fileName
 import com.cxtapp.network.utils.toRequestBody
+import com.google.protobuf.MessageLite
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import okio.ByteString
@@ -137,6 +138,10 @@ open class BodyRequest : BaseRequest() {
         partBody.addPart(body)
     }
 
+    fun param(body: MessageLite) {
+        protoBody.addMessage(body)
+    }
+
     //</editor-fold>
 
     //<editor-fold desc="JSON">
@@ -185,22 +190,23 @@ open class BodyRequest : BaseRequest() {
     }
 
     override fun buildRequest(): Request {
-        val body = if (body != null) body else {
-            val form = formBody.build()
-            try {
-                partBody.build()
+        val finalBody = when {
+            body != null -> body
+            protoBody.value != null -> protoBody.build()
+            partBody.build().size > 0 -> {
+                val form = formBody.build()
                 for (i in 0 until form.size) {
                     val name = form.name(i)
                     val value = form.value(i)
                     partBody.addFormDataPart(name, value)
                 }
                 partBody.setType(mediaType).build()
-            } catch (e: IllegalStateException) {
-                form
             }
+            // 4️⃣ 最后 fallback 到普通 formBody
+            else -> formBody.build()
         }
 
-        return okHttpRequest.method(method.name, body)
+        return okHttpRequest.method(method.name, finalBody)
             .url(httpUrl.build())
             .setConverter(converter)
             .build()
