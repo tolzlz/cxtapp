@@ -54,3 +54,4 @@ dependencies {
 
 //https://github.com/liujingxing/rxhttp/tree/master
 //https://github.com/liangjingkanji/Net/
+//https://github.com/wikimedia/apps-android-wikipedia

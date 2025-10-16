@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ThemeDark">
+        <item name="paper_color">@color/gray700</item>
+
+        <item name="border_color">@color/gray650</item>
+    </style>
+</resources>

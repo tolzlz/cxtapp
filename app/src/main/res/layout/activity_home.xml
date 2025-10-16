@@ -22,15 +22,15 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <View
-            android:id="@+id/main_nav_tab_border"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="?attr/border_color"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/main_nav_tab_layout"/>
+        android:id="@+id/main_nav_tab_border"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="?attr/border_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/main_nav_tab_layout"/>
 
-    <org.wikipedia.navtab.NavTabLayout
+    <com.cxtapp.navtab.view.NavTabLayout
             android:id="@+id/main_nav_tab_layout"
             android:background="?attr/paper_color"
             android:layout_width="match_parent"
@@ -38,13 +38,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:itemIconTint="@color/color_state_nav_tab"
-            app:itemTextAppearanceActive="@style/BottomNavigationTextAppearance.Active"
-            app:itemTextAppearanceInactive="@style/BottomNavigationTextAppearance"
-            app:itemTextColor="@color/color_state_nav_tab"
-            app:labelVisibilityMode="labeled"
-            app:tabGravity="fill"
-            app:itemPaddingTop="8dp"
             app:elevation="0dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
