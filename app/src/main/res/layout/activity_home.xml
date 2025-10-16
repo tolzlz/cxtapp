@@ -1,33 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:fitsSystemWindows="true"
-        tools:context=".main.home.HomeActivity">
+        android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/main_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
-
-        <ImageView
-                android:id="@+id/main_toolbar_wordmark"
-                android:layout_width="128dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:contentDescription="@null"
-                android:visibility="gone"
-                app:srcCompat="@drawable/feed_header_wordmark"
-                app:tint="?attr/primary_color" />
-
-    </com.google.android.material.appbar.MaterialToolbar>
-
-    <FrameLayout
-            android:id="@+id/fragment_container"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/fragment_main_coordinator"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
-</LinearLayout>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/main_nav_tab_border">
+
+        <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/main_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <View
+            android:id="@+id/main_nav_tab_border"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?attr/border_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/main_nav_tab_layout"/>
+
+    <org.wikipedia.navtab.NavTabLayout
+            android:id="@+id/main_nav_tab_layout"
+            android:background="?attr/paper_color"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nav_bar_height"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:itemIconTint="@color/color_state_nav_tab"
+            app:itemTextAppearanceActive="@style/BottomNavigationTextAppearance.Active"
+            app:itemTextAppearanceInactive="@style/BottomNavigationTextAppearance"
+            app:itemTextColor="@color/color_state_nav_tab"
+            app:labelVisibilityMode="labeled"
+            app:tabGravity="fill"
+            app:itemPaddingTop="8dp"
+            app:elevation="0dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
