@@ -8,15 +8,15 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
 }
 
-subprojects {
-    configurations.all {
-        exclude(group = "androidx.annotation", module = "annotation")
-        exclude(group = "androidx.arch.core", module = "core-runtime")
-        exclude(group = "androidx.concurrent", module = "concurrent-futures")
-        resolutionStrategy {
-            force("androidx.annotation:annotation:1.9.1")
-            force("androidx.arch.core:core-runtime:2.2.0")
-            force("androidx.concurrent:concurrent-futures:1.3.0")
-        }
-    }
-}
+//subprojects {
+//    configurations.all {
+//        exclude(group = "androidx.annotation", module = "annotation")
+//        exclude(group = "androidx.arch.core", module = "core-runtime")
+//        exclude(group = "androidx.concurrent", module = "concurrent-futures")
+//        resolutionStrategy {
+//            force("androidx.annotation:annotation:1.9.1")
+//            force("androidx.arch.core:core-runtime:2.2.0")
+//            force("androidx.concurrent:concurrent-futures:1.3.0")
+//        }
+//    }
+//}
